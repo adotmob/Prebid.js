@@ -4,6 +4,7 @@ import {BANNER, NATIVE, VIDEO} from '../src/mediaTypes.js';
 import {isStr, isArray, isNumber, isPlainObject, isBoolean, logError, replaceAuctionPrice} from '../src/utils.js';
 import find from 'core-js-pure/features/array/find.js';
 import { config } from '../src/config.js';
+import { getStorageManager } from '../src/storageManager.js';
 
 const ADAPTER_VERSION = 'v1.0.0';
 const BID_METHOD = 'POST';
@@ -22,6 +23,12 @@ const BID_SUPPORTED_MEDIA_TYPES = ['banner', 'video', 'native'];
 const DOMAIN_REGEX = new RegExp('//([^/]*)');
 const OUTSTREAM_VIDEO_PLAYER_URL = 'https://adserver.adotmob.com/video/player.min.js';
 
+const gvlid = 2708;
+const bidderCode = 'adot';
+const adotStorageKey = 'adot';
+
+const storage = getStorageManager(gvlid, bidderCode);
+
 const NATIVE_PLACEMENTS = {
   title: {id: 1, name: 'title'},
   icon: {id: 2, type: 1, name: 'img'},
@@ -33,6 +40,16 @@ const NATIVE_PLACEMENTS = {
 const NATIVE_ID_MAPPING = {1: 'title', 2: 'icon', 3: 'image', 4: 'sponsoredBy', 5: 'body', 6: 'cta'};
 const NATIVE_PRESET_FORMATTERS = {
   image: formatNativePresetImage
+}
+
+function getFromLocalStorage(key) {
+  return storage.getDataFromLocalStorage(key) || undefined;
+}
+
+function saveOnLocalStorage(key, value) {
+  if (key && value) {
+    storage.setDataInLocalStorage(key, value);
+  }
 }
 
 function isNone(value) {
@@ -419,7 +436,8 @@ function getRegulationFromAdUnitContext(adUnitContext) {
 function generateBidRequestExtension() {
   return {
     adot: {adapter_version: ADAPTER_VERSION},
-    should_use_gzip: true
+    should_use_gzip: true,
+    uuid: getFromLocalStorage()
   };
 }
 
@@ -678,10 +696,14 @@ const adotBidderSpec = {
     });
   },
   interpretResponse(serverResponse, serverRequest) {
+    const bidResponse = serverResponse.body;
+
+    if (bidResponse.ext['uid']) {
+      saveOnLocalStorage(adotStorageKey, bidResponse.ext['uid']);
+    }
+
     if (!validateServerRequest(serverRequest)) return [];
     if (!validateServerResponse(serverResponse)) return [];
-
-    const bidResponse = serverResponse.body;
 
     return bidResponse.seatbid
       .filter(seatBid => isPlainObject(seatBid) && isArray(seatBid.bid))
