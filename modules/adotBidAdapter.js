@@ -8,7 +8,7 @@ import { OUTSTREAM } from '../src/video.js';
 const BIDDER_CODE = 'adotb';
 const ADAPTER_VERSION = 'v2.0.0';
 const BID_METHOD = 'POST';
-const BIDDER_URL = 'http://localhost:8080/headerbidding{PUBLISHER_PATH}/bidrequest';
+const BIDDER_URL = 'https://dsp.adotmob.com/headerbidding{PUBLISHER_PATH}/bidrequest';
 const REQUIERED_VIDEO_PARAMS = ['mimes', 'minduration', 'maxduration', 'protocols'];
 const DOMAIN_REGEX = new RegExp('//([^/]*)');
 const FIRST_PRICE = 1;
@@ -139,7 +139,7 @@ function getMediaType(mediaTypes) {
  * Build OpenRtb imp banner from given bidderRequest and media
  *
  * @param {Banner} banner MediaType Banner Object
- * @param {BidderRequest} bidderRequest 
+ * @param {BidderRequest} bidderRequest
  * @returns {OpenRtbBanner} OpenRtb banner object
  */
 function buildBanner(banner, bidderRequest) {
@@ -317,7 +317,7 @@ function isBidRequestValid(bid) {
  * @param {Array<AdUnit>} adUnits Array of PrebidJS Adunit
  * @param {BidderRequest} bidderRequest PrebidJS BidderRequest
  * @param {string} requestId Request ID
- * @returns 
+ * @returns
  */
 function buildBidRequest(adUnits, bidderRequest, requestId) {
   const data = {
@@ -340,7 +340,7 @@ function buildBidRequest(adUnits, bidderRequest, requestId) {
  * @param {BidderRequest} bidderRequest PrebidJS BidderRequest
  * @param {string} bidderUrl Adot Bidder URL
  * @param {string} requestId Request ID
- * @returns 
+ * @returns
  */
 function buildAjaxRequest(adUnits, bidderRequest, bidderUrl, requestId) {
   return {
@@ -371,7 +371,7 @@ function splitAdUnits(validBidRequests) {
  * Build Ajax request Array
  *
  * @param {Array<PrebidBidRequest>} validBidRequests
- * @param {BidderRequest} bidderRequest 
+ * @param {BidderRequest} bidderRequest
  * @returns {Array<AjaxRequest>}
  */
 function buildRequests(validBidRequests, bidderRequest) {
@@ -461,7 +461,7 @@ function buildRenderer(bid, mediaType) {
 
 /**
  * Build PrebidJS response from OpenRtbBid
- * 
+ *
  * @param {OpenRtbBid} bid
  * @param {string} mediaType
  * @returns {Object}
@@ -483,7 +483,7 @@ function buildCreativeBidData(bid, mediaType) {
 
 /**
  * Return if given bid and imp are valid
- * 
+ *
  * @param {OpenRtbBid} bid OpenRtb Bid
  * @param {Imp} imp OpenRtb Imp
  * @returns {boolean}
@@ -494,10 +494,10 @@ function bidImpIsInvalid(bid, imp) {
 
 /**
  * Build PrebidJS Bid Response from given OpenRTB Bid
- * 
- * @param {OpenRtbBid} bid 
- * @param {OpenRtbBidResponse} bidResponse 
- * @param {OpenRtbBid} imp 
+ *
+ * @param {OpenRtbBid} bid
+ * @param {OpenRtbBidResponse} bidResponse
+ * @param {OpenRtbBid} imp
  * @returns {PrebidJSResponse}
  */
 function buildBidResponse(bid, bidResponse, imp) {
@@ -513,7 +513,7 @@ function buildBidResponse(bid, bidResponse, imp) {
     mediaType
   };
 
-  if (bid.dealid) baseBid.dealId = baseBid.dealid;
+  if (bid.dealid) baseBid.dealId = bid.dealid;
   if (bid.adomain) baseBid.meta = { advertiserDomains: bid.adomain };
 
   if (mediaType === NATIVE) return { ...baseBid, native: buildNativeBidData(bid, imp) };
@@ -522,7 +522,7 @@ function buildBidResponse(bid, bidResponse, imp) {
 
 /**
  * Find OpenRtb Imp from request with same id that given bid
- * 
+ *
  * @param {OpenRtbBid} bid
  * @param {OpenRtbRequest} bidRequest
  * @returns {Imp} OpenRtb Imp
@@ -560,7 +560,7 @@ function isValidRequest(request) {
 
 /**
  * Interpret given OpenRtb Response to build PrebidJS Response
- * 
+ *
  * @param {OpenRtbBidResponse} serverResponse
  * @param {OpenRtbRequest} request
  * @returns {PrebidJSResponse}
@@ -585,8 +585,8 @@ function interpretResponse(serverResponse, request) {
 /**
  * Call Adunit getFloor function with given argument to get specific floor.
  * Return 0 by default
- * 
- * @param {AdUnit} adUnit 
+ *
+ * @param {AdUnit} adUnit
  * @param {Array<number>|stirng} size Adunit size or *
  * @param {string} mediaType
  * @param {stirng} currency USD by default
@@ -603,14 +603,14 @@ function getFloor(adUnit, size, mediaType, currency) {
 /**
  * Call getFloor for each format and return the lower floor
  * Return 0 by default
- * 
+ *
  * interface Format { w: number; h: number }
- * 
- * @param {AdUnit} adUnit 
+ *
+ * @param {AdUnit} adUnit
  * @param {Array<Format>} formats Media formats
  * @param {string} mediaType
  * @param {stirng} currency USD by default
- * @returns 
+ * @returns
  */
 function getMainFloor(adUnit, formats, mediaType, currency) {
   if (!formats) return getFloor(adUnit, '*', mediaType, currency);
