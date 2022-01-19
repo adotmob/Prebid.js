@@ -25,6 +25,7 @@ const NATIVE_ID_MAPPING = { 1: 'title', 2: 'icon', 3: 'image', 4: 'sponsoredBy',
 const OUTSTREAM_VIDEO_PLAYER_URL = 'https://adserver.adotmob.com/video/player.min.js';
 const BID_RESPONSE_NET_REVENUE = true;
 const BID_RESPONSE_TTL = 10;
+const DEFAULT_CURRENCY = 'USD';
 
 /**
  * Parse string in plain object
@@ -271,7 +272,7 @@ function buildImpFromAdUnit(adUnit, bidderRequest) {
   if (!mediaType) return null;
 
   const media = IMP_BUILDER[mediaType](mediaTypes[mediaType], bidderRequest, adUnit)
-  const currency = config.getConfig('currency.adServerCurrency') || 'USD';
+  const currency = config.getConfig('currency.adServerCurrency') || DEFAULT_CURRENCY;
   const bidfloor = getMainFloor(adUnit, media.format, mediaType, currency);
 
   return {
