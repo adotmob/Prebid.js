@@ -9,7 +9,7 @@ const BIDDER_CODE = 'adotb';
 const ADAPTER_VERSION = 'v2.0.0';
 const BID_METHOD = 'POST';
 const BIDDER_URL = 'https://dsp.adotmob.com/headerbidding{PUBLISHER_PATH}/bidrequest';
-const REQUIERED_VIDEO_PARAMS = ['mimes', 'minduration', 'maxduration', 'protocols'];
+const REQUIRED_VIDEO_PARAMS = ['mimes', 'minduration', 'maxduration', 'protocols'];
 const DOMAIN_REGEX = new RegExp('//([^/]*)');
 const FIRST_PRICE = 1;
 const IMP_BUILDER = { banner: buildBanner, video: buildVideo, native: buildNative };
@@ -295,7 +295,7 @@ function buildImpFromAdUnit(adUnit, bidderRequest) {
  * @returns {boolean}
  */
 function isValidVideo(video) {
-  if (REQUIERED_VIDEO_PARAMS.some((param) => video[param] === undefined)) return false;
+  if (REQUIRED_VIDEO_PARAMS.some((param) => video[param] === undefined)) return false;
   return true;
 }
 
