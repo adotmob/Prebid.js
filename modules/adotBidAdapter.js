@@ -317,7 +317,8 @@ function isBidRequestValid(bid) {
  * @param {Array<AdUnit>} adUnits Array of PrebidJS Adunit
  * @param {BidderRequest} bidderRequest PrebidJS BidderRequest
  * @param {string} requestId Request ID
- * @returns
+ *
+ * @returns {OpenRTBBidRequest} OpenRTB bid request
  */
 function buildBidRequest(adUnits, bidderRequest, requestId) {
   const data = {
@@ -387,7 +388,8 @@ function buildRequests(validBidRequests, bidderRequest) {
  * Build Native PrebidJS Response grom OpenRtb Response
  *
  * @param {OpenRtbBid} bid
- * @returns {}
+ *
+ * @returns {NativeAssets} Native PrebidJS
  */
 function buildNativeBidData(bid) {
   const { adm, price } = bid;
@@ -488,7 +490,7 @@ function buildCreativeBidData(bid, mediaType) {
  * @param {Imp} imp OpenRtb Imp
  * @returns {boolean}
  */
-function bidImpIsInvalid(bid, imp) {
+function isBidImpInvalid(bid, imp) {
   return !bid || !imp;
 }
 
@@ -501,7 +503,7 @@ function bidImpIsInvalid(bid, imp) {
  * @returns {PrebidJSResponse}
  */
 function buildBidResponse(bid, bidResponse, imp) {
-  if (bidImpIsInvalid(bid, imp)) return null;
+  if (isBidImpInvalid(bid, imp)) return null;
   const mediaType = bid.ext.adot.media_type;
   const baseBid = {
     requestId: bid.impid,
@@ -587,10 +589,11 @@ function interpretResponse(serverResponse, request) {
  * Return 0 by default
  *
  * @param {AdUnit} adUnit
- * @param {Array<number>|stirng} size Adunit size or *
+ * @param {Array<number>|string} size Adunit size or *
  * @param {string} mediaType
- * @param {stirng} currency USD by default
- * @returns {number}
+ * @param {string} currency USD by default
+ *
+ * @returns {number} Floor price
  */
 function getFloor(adUnit, size, mediaType, currency) {
   if (!isFn(adUnit.getFloor)) return 0;
@@ -609,8 +612,9 @@ function getFloor(adUnit, size, mediaType, currency) {
  * @param {AdUnit} adUnit
  * @param {Array<Format>} formats Media formats
  * @param {string} mediaType
- * @param {stirng} currency USD by default
- * @returns
+ * @param {string} currency USD by default
+ *
+ * @returns {number} Lower floor.
  */
 function getMainFloor(adUnit, formats, mediaType, currency) {
   if (!formats) return getFloor(adUnit, '*', mediaType, currency);
